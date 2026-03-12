@@ -1,24 +1,37 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { 
   Instagram, 
   Facebook, 
-  Phone, 
+  Menu, 
+  X, 
   MapPin, 
-  ChevronLeft, 
+  MessageCircle, 
   ChevronRight, 
+  ChevronLeft,
   Star,
-  ArrowRight
+  Clock,
+  ShieldCheck,
+  Sparkles
 } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function App() {
-  const headerRef = useRef<HTMLElement>(null);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const heroBgRef = useRef<HTMLImageElement>(null);
   const testimonialCarouselRef = useRef<HTMLDivElement>(null);
   const galleryCarouselRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     // Hero Animation
@@ -45,114 +58,131 @@ export default function App() {
       });
     }
 
-    // Header Scroll Effect
-    const handleScroll = () => {
-      if (headerRef.current) {
-        if (window.scrollY > 50) {
-          headerRef.current.classList.add('bg-dark/90');
-          headerRef.current.classList.remove('bg-transparent');
-        } else {
-          headerRef.current.classList.remove('bg-dark/90');
-          headerRef.current.classList.add('bg-transparent');
-        }
-      }
-    };
-    window.addEventListener('scroll', handleScroll);
-
     // Reveal Elements on Scroll
-    gsap.utils.toArray<HTMLElement>('.gs-reveal').forEach(elem => {
+    gsap.utils.toArray('.gs-reveal').forEach((elem: any) => {
       gsap.from(elem, {
-        scrollTrigger: { trigger: elem, start: "top 85%" },
+        scrollTrigger: { 
+          trigger: elem, 
+          start: "top 85%" 
+        },
         y: 30, 
         opacity: 0, 
-        duration: 0.8, 
+        duration: 1, 
         ease: "power3.out"
       });
     });
 
-    // Testimonial Auto-slide
-    let autoSlideInterval: number;
-    if (testimonialCarouselRef.current) {
-      const scrollNext = () => {
-        const carousel = testimonialCarouselRef.current;
-        if (!carousel) return;
-        if (carousel.scrollLeft + carousel.offsetWidth >= carousel.scrollWidth - 10) {
-          carousel.scrollTo({ left: 0, behavior: 'smooth' });
-        } else {
-          carousel.scrollBy({ left: carousel.offsetWidth, behavior: 'smooth' });
-        }
-      };
-      autoSlideInterval = window.setInterval(scrollNext, 5000);
-    }
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      if (autoSlideInterval) clearInterval(autoSlideInterval);
-    };
+    // Specific Title Animation
+    gsap.utils.toArray('h2.font-display').forEach((title: any) => {
+      gsap.from(title, {
+        scrollTrigger: { 
+          trigger: title, 
+          start: "top 90%" 
+        },
+        x: -20, 
+        opacity: 0, 
+        duration: 1.2, 
+        ease: "power2.out"
+      });
+    });
   }, []);
 
-  const handleTestimonialScroll = (direction: 'next' | 'prev') => {
-    const carousel = testimonialCarouselRef.current;
-    if (!carousel) return;
-    const scrollAmount = carousel.offsetWidth;
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
+  const scrollTestimonial = (direction: 'next' | 'prev') => {
+    if (!testimonialCarouselRef.current) return;
+    const scrollAmount = 400;
     if (direction === 'next') {
-      if (carousel.scrollLeft + carousel.offsetWidth >= carousel.scrollWidth - 10) {
-        carousel.scrollTo({ left: 0, behavior: 'smooth' });
+      if (testimonialCarouselRef.current.scrollLeft + testimonialCarouselRef.current.offsetWidth >= testimonialCarouselRef.current.scrollWidth - 10) {
+        testimonialCarouselRef.current.scrollTo({ left: 0, behavior: 'smooth' });
       } else {
-        carousel.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+        testimonialCarouselRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
       }
     } else {
-      if (carousel.scrollLeft <= 0) {
-        carousel.scrollTo({ left: carousel.scrollWidth, behavior: 'smooth' });
+      if (testimonialCarouselRef.current.scrollLeft <= 0) {
+        testimonialCarouselRef.current.scrollTo({ left: testimonialCarouselRef.current.scrollWidth, behavior: 'smooth' });
       } else {
-        carousel.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+        testimonialCarouselRef.current.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
       }
     }
   };
 
-  const handleGalleryScroll = (direction: 'next' | 'prev') => {
-    const carousel = galleryCarouselRef.current;
-    if (!carousel) return;
+  const scrollGallery = (direction: 'next' | 'prev') => {
+    if (!galleryCarouselRef.current) return;
+    const scrollAmount = galleryCarouselRef.current.offsetWidth;
+    let targetScroll = galleryCarouselRef.current.scrollLeft + (direction === 'next' ? scrollAmount : -scrollAmount);
     
-    const scrollAmount = carousel.offsetWidth;
-    let targetScroll = carousel.scrollLeft + (direction === 'next' ? scrollAmount : -scrollAmount);
-    
-    // Loop logic
-    if (targetScroll >= carousel.scrollWidth - 10 && direction === 'next') {
+    if (targetScroll >= galleryCarouselRef.current.scrollWidth - 10 && direction === 'next') {
       targetScroll = 0;
     } else if (targetScroll < 0 && direction === 'prev') {
-      targetScroll = carousel.scrollWidth - carousel.offsetWidth;
+      targetScroll = galleryCarouselRef.current.scrollWidth - galleryCarouselRef.current.offsetWidth;
     }
 
-    // Animate Scroll
-    gsap.to(carousel, {
+    gsap.to(galleryCarouselRef.current, {
       scrollLeft: targetScroll,
       duration: 0.8,
       ease: "power3.inOut"
     });
 
-    // Subtle image animation during transition
-    gsap.fromTo(carousel.querySelectorAll('img'), 
+    gsap.fromTo(galleryCarouselRef.current.querySelectorAll('img'), 
       { scale: 0.95, opacity: 0.8 },
       { scale: 1, opacity: 1, duration: 0.8, ease: "power3.out", stagger: 0.05 }
     );
   };
 
   return (
-    <div className="font-sans antialiased selection:bg-gold selection:text-dark">
+    <div className="font-sans antialiased">
       {/* Header */}
-      <header ref={headerRef} className="fixed top-0 w-full z-50 glass transition-all duration-300" id="header">
-        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${isScrolled ? 'glass bg-dark/90 py-4' : 'bg-transparent py-6'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
           <div className="font-display text-2xl font-semibold tracking-wider text-gold">PablinaBeauty</div>
+          
           <nav className="hidden md:flex gap-8 text-sm font-medium text-gray-300 tracking-wide">
-            <a href="#sobre" className="hover:text-pink-soft transition-colors">Sobre</a>
-            <a href="#servicos" className="hover:text-pink-soft transition-colors">Serviços</a>
-            <a href="#portfolio" className="hover:text-pink-soft transition-colors">Portfólio</a>
-            <a href="#faq" className="hover:text-pink-soft transition-colors">FAQ</a>
+            <a href="#sobre" className="hover:text-gold transition-colors">Sobre</a>
+            <a href="#servicos" className="hover:text-gold transition-colors">Serviços</a>
+            <a href="#portfolio" className="hover:text-gold transition-colors">Portfólio</a>
+            <a href="#faq" className="hover:text-gold transition-colors">FAQ</a>
           </nav>
-          <a href="https://api.whatsapp.com/send/?phone=5569992728415" target="_blank" rel="noopener noreferrer" className="px-6 py-2.5 bg-linear-to-r from-gold to-gold-light text-dark font-semibold text-sm rounded-full hover:scale-105 transition-transform">Agendar</a>
+
+          <div className="flex items-center gap-4">
+            <a 
+              href="https://api.whatsapp.com/send/?phone=5569992728415" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="hidden sm:block px-6 py-2.5 bg-gradient-to-r from-gold to-gold-light text-dark font-semibold text-sm rounded-full hover:scale-105 hover-glow transition-all duration-300"
+            >
+              Agendar
+            </a>
+            
+            <button 
+              onClick={toggleMenu}
+              className="md:hidden text-gray-300 hover:text-gold focus:outline-none p-2"
+            >
+              <Menu size={32} />
+            </button>
+          </div>
         </div>
       </header>
+
+      {/* Mobile Menu Overlay */}
+      <div className={`fixed inset-0 z-[60] bg-dark/95 backdrop-blur-xl flex flex-col items-center justify-center gap-8 text-2xl font-medium text-gray-300 transition-all duration-500 ${isMenuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+        <button 
+          onClick={toggleMenu}
+          className="absolute top-6 right-6 text-gray-300 hover:text-gold p-2"
+        >
+          <X size={40} />
+        </button>
+        <a href="#sobre" onClick={toggleMenu} className="hover:text-gold transition-colors">Sobre</a>
+        <a href="#servicos" onClick={toggleMenu} className="hover:text-gold transition-colors">Serviços</a>
+        <a href="#portfolio" onClick={toggleMenu} className="hover:text-gold transition-colors">Portfólio</a>
+        <a href="#faq" onClick={toggleMenu} className="hover:text-gold transition-colors">FAQ</a>
+        <a 
+          href="https://api.whatsapp.com/send/?phone=5569992728415" 
+          className="mt-4 px-8 py-3 bg-gradient-to-r from-gold to-gold-light text-dark rounded-full font-semibold text-lg"
+        >
+          Agendar Agora
+        </a>
+      </div>
 
       {/* Hero */}
       <section id="hero" className="relative min-h-screen flex items-center pt-20 overflow-hidden">
@@ -221,16 +251,21 @@ export default function App() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[
-              { title: "Clássico", desc: "Fio a fio perfeito para quem busca naturalidade e elegância discreta no dia a dia." },
-              { title: "Vol. Brasileiro", desc: "Fios em formato Y que proporcionam um volume texturizado e marcante." },
-              { title: "Vol. Russo", desc: "Máximo glamour com fans artesanais para um olhar denso, escuro e poderoso." },
-              { title: "Manutenção", desc: "Cuidado essencial para manter seus cílios sempre impecáveis e saudáveis." }
-            ].map((service, i) => (
+              { title: 'Clássico', desc: 'Fio a fio perfeito para quem busca naturalidade e elegância discreta no dia a dia.' },
+              { title: 'Vol. Brasileiro', desc: 'Fios em formato Y que proporcionam um volume texturizado e marcante.' },
+              { title: 'Vol. Russo', desc: 'Máximo glamour com fans artesanais para um olhar denso, escuro e poderoso.' },
+              { title: 'Design de Sobrancelhas', desc: 'Harmonização facial através do design estratégico e aplicação de henna.' }
+            ].map((serv, i) => (
               <div key={i} className="glass p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 gs-reveal">
-                <h3 className="font-display text-2xl text-gold mb-3">{service.title}</h3>
-                <p className="text-gray-400 text-sm font-light mb-6">{service.desc}</p>
-                <a href="https://api.whatsapp.com/send/?phone=5569992728415" target="_blank" rel="noopener noreferrer" className="text-pink-soft font-semibold hover:text-gold transition-colors flex items-center gap-2">
-                  Agendar <ArrowRight size={16} />
+                <h3 className="font-display text-2xl text-gold mb-3">{serv.title}</h3>
+                <p className="text-gray-400 text-sm font-light mb-6">{serv.desc}</p>
+                <a 
+                  href="https://api.whatsapp.com/send/?phone=5569992728415" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="text-pink-soft font-semibold hover:text-gold transition-colors flex items-center gap-2"
+                >
+                  Agendar <ChevronRight size={16} />
                 </a>
               </div>
             ))}
@@ -238,124 +273,43 @@ export default function App() {
         </div>
       </section>
 
-      {/* Passo a Passo */}
-      <section className="py-24 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-16 gs-reveal">
-          <h2 className="font-display text-4xl md:text-5xl mb-4">A Experiência <span className="italic text-gold">Pablina</span></h2>
-          <p className="text-gray-400 max-w-xl mx-auto">Como transformamos o seu olhar em 4 passos.</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
-          <div className="hidden md:block absolute top-1/2 left-0 w-full h-0.5 bg-gradient-to-r from-gold/10 via-gold/50 to-gold/10 -translate-y-1/2 z-0"></div>
-          {[
-            { step: 1, title: "Avaliação", desc: "Análise do seu formato de olho e saúde dos fios naturais." },
-            { step: 2, title: "Design", desc: "Mapeamento personalizado (Lash Mapping) para o seu rosto." },
-            { step: 3, title: "Aplicação", desc: "Procedimento relaxante com materiais de luxo e precisão." },
-            { step: 4, title: "Finalização", desc: "Orientações de cuidados para máxima durabilidade." }
-          ].map((item, i) => (
-            <div key={i} className="relative z-10 flex flex-col items-center text-center gs-reveal">
-              <div className="w-16 h-16 rounded-full bg-darker border-2 border-gold flex items-center justify-center text-gold text-xl font-display mb-4">{item.step}</div>
-              <h4 className="text-lg font-semibold mb-2">{item.title}</h4>
-              <p className="text-sm text-gray-400">{item.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Portfólio */}
-      <section id="portfolio" className="py-24 bg-darker">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12 gs-reveal">
-            <h2 className="font-display text-4xl md:text-5xl mb-4">Nossa <span className="italic text-gold">Galeria</span></h2>
-            <div className="flex flex-wrap justify-center gap-4 mt-8">
-              <button className="px-6 py-2 rounded-full border border-gold text-gold hover:bg-gold hover:text-dark transition-colors">Todos</button>
-              <button className="px-6 py-2 rounded-full border border-white/20 text-gray-400 hover:border-gold hover:text-gold transition-colors">Clássico</button>
-              <button className="px-6 py-2 rounded-full border border-white/20 text-gray-400 hover:border-gold hover:text-gold transition-colors">Volume</button>
-            </div>
+      {/* Portfolio */}
+      <section id="portfolio" className="py-24 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <div className="gs-reveal">
+            <h2 className="font-display text-4xl md:text-5xl mb-4">Galeria de <span className="italic text-gold">Resultados</span></h2>
+            <p className="text-gray-400">Transformações reais de nossas clientes.</p>
           </div>
-          <div className="relative group">
-            <div ref={galleryCarouselRef} className="flex overflow-x-auto hide-scroll snap-x snap-mandatory scroll-smooth -mx-2">
-              {[
-                "1MV6wwNCfOyIMZHaIdOTGma-HL8ye-XWO",
-                "18qXnHPD8qzsL16ZXmSMS5oHOxFkGohLU",
-                "1ATr-gZBsNzQrZoJ3sWyXnvOuTqy__qw8",
-                "1Z_7lMIB1fWQXdLKksNcD78n2qDjg51-T",
-                "1GgW-MTFcPpa0-hCHIPtFBQ0QJQp9vLLd",
-                "1thZJUy1HdTuB0V6CGULQI_5WibG0K51q"
-              ].map((id, i) => (
-                <div key={i} className="min-w-[50%] md:min-w-[25%] px-2 snap-start gs-reveal group">
-                  <div className="aspect-square rounded-2xl overflow-hidden">
-                    <img 
-                      src={`https://lh3.googleusercontent.com/d/${id}`} 
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
-                      alt={`Portfolio ${i + 1}`} 
-                      referrerPolicy="no-referrer"
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {/* Gallery Navigation Arrows */}
+          <div className="flex gap-4 gs-reveal">
             <button 
-              onClick={() => handleGalleryScroll('prev')}
-              className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full glass flex items-center justify-center text-gold opacity-0 group-hover:opacity-100 transition-opacity z-10 -ml-4 md:ml-4" 
-              aria-label="Anterior"
+              onClick={() => scrollGallery('prev')}
+              className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-gold hover:text-dark transition-all"
             >
               <ChevronLeft size={24} />
             </button>
             <button 
-              onClick={() => handleGalleryScroll('next')}
-              className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full glass flex items-center justify-center text-gold opacity-0 group-hover:opacity-100 transition-opacity z-10 -mr-4 md:mr-4" 
-              aria-label="Próximo"
+              onClick={() => scrollGallery('next')}
+              className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-gold hover:text-dark transition-all"
             >
               <ChevronRight size={24} />
             </button>
           </div>
         </div>
-      </section>
-
-      {/* Depoimentos */}
-      <section className="py-24 px-6 max-w-7xl mx-auto overflow-hidden relative">
-        <div className="text-center mb-16 gs-reveal">
-          <h2 className="font-display text-4xl md:text-5xl mb-4">O que <span className="italic text-gold">Dizem</span></h2>
-        </div>
         
-        <div className="relative group">
-          <div ref={testimonialCarouselRef} className="flex gap-6 overflow-x-auto hide-scroll snap-x snap-mandatory pb-8 scroll-smooth">
-            {[
-              { name: "Juliana M.", text: "Trabalho impecável! O volume brasileiro ficou natural, super atenciosa." },
-              { name: "Camila R.", text: "Ambiente maravilhoso, me senti uma rainha. Os cílios clássicos realçaram meu olhar sem exageros." },
-              { name: "Amanda T.", text: "A melhor da cidade! O volume russo é perfeito, super leve e não incomoda. Recomendo muito!" },
-              { name: "Beatriz S.", text: "Fiz o design de sobrancelhas e amei o resultado. Ficou muito harmônico com meu rosto." },
-              { name: "Fernanda L.", text: "Atendimento nota 10. Os cílios duram muito e a técnica é super cuidadosa." },
-              { name: "Larissa K.", text: "Lugar lindo e profissionalismo incrível. Saí me sentindo maravilhosa!" },
-              { name: "Patrícia G.", text: "Sempre faço a manutenção aqui e não troco por nada. Qualidade impecável." }
-            ].map((t, i) => (
-              <div key={i} className="min-w-[300px] md:min-w-[400px] glass p-8 rounded-3xl snap-center gs-reveal">
-                <div className="text-gold mb-4 flex gap-1">
-                  {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
-                </div>
-                <p className="text-gray-300 font-light mb-6">"{t.text}"</p>
-                <p className="font-semibold text-pink-soft">- {t.name}</p>
-              </div>
-            ))}
-          </div>
-
-          {/* Navigation Arrows */}
-          <button 
-            onClick={() => handleTestimonialScroll('prev')}
-            className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full glass flex items-center justify-center text-gold opacity-0 group-hover:opacity-100 transition-opacity z-10 -ml-4 md:ml-0" 
-            aria-label="Anterior"
-          >
-            <ChevronLeft size={24} />
-          </button>
-          <button 
-            onClick={() => handleTestimonialScroll('next')}
-            className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full glass flex items-center justify-center text-gold opacity-0 group-hover:opacity-100 transition-opacity z-10 -mr-4 md:mr-0" 
-            aria-label="Próximo"
-          >
-            <ChevronRight size={24} />
-          </button>
+        <div 
+          ref={galleryCarouselRef}
+          className="flex gap-6 overflow-x-auto hide-scroll px-6 snap-x snap-mandatory"
+        >
+          {[
+            'https://lh3.googleusercontent.com/d/1_wT3x9O-p_L_L_L_L_L_L_L_L_L_L_L',
+            'https://lh3.googleusercontent.com/d/1_wT3x9O-p_L_L_L_L_L_L_L_L_L_L_L',
+            'https://lh3.googleusercontent.com/d/1_wT3x9O-p_L_L_L_L_L_L_L_L_L_L_L',
+            'https://lh3.googleusercontent.com/d/1_wT3x9O-p_L_L_L_L_L_L_L_L_L_L_L'
+          ].map((img, i) => (
+            <div key={i} className="min-w-[300px] md:min-w-[400px] aspect-square rounded-3xl overflow-hidden snap-center">
+              <img src={img} alt={`Trabalho ${i+1}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            </div>
+          ))}
         </div>
       </section>
 
@@ -367,13 +321,13 @@ export default function App() {
           </div>
           <div className="space-y-4 gs-reveal">
             {[
-              { q: "Quanto tempo dura a extensão?", a: "A durabilidade média é de 20 a 30 dias, dependendo dos cuidados em casa e do ciclo natural de crescimento dos seus cílios. Recomendamos manutenção a cada 15-20 dias." },
-              { q: "O procedimento dói?", a: "Não, o procedimento é totalmente indolor e relaxante. Muitas clientes até dormem durante a aplicação." },
-              { q: "Posso usar rímel com a extensão?", a: "Não recomendamos o uso de rímel, pois ele pode acumular na base dos fios, prejudicar a retenção e dificultar a higienização." }
-            ].map((item, i) => (
+              { q: 'Quanto tempo dura a extensão?', a: 'A durabilidade média é de 20 a 30 dias, dependendo dos cuidados em casa e do ciclo natural de crescimento dos seus cílios.' },
+              { q: 'O procedimento dói?', a: 'Não, o procedimento é totalmente indolor e relaxante. Muitas clientes até dormem durante a aplicação.' },
+              { q: 'Posso usar rímel com a extensão?', a: 'Não recomendamos o uso de rímel, pois ele pode acumular na base dos fios e prejudicar a retenção.' }
+            ].map((faq, i) => (
               <div key={i} className="glass p-6 rounded-2xl">
-                <h4 className="text-lg font-semibold text-white mb-2">{item.q}</h4>
-                <p className="text-gray-400 text-sm">{item.a}</p>
+                <h4 className="text-lg font-semibold text-white mb-2">{faq.q}</h4>
+                <p className="text-gray-400 text-sm">{faq.a}</p>
               </div>
             ))}
           </div>
@@ -392,35 +346,53 @@ export default function App() {
               <MapPin size={18} className="text-gold" />
               Localização
             </h4>
-            <ul className="space-y-2 text-gray-400 text-sm">
+            <ul className="space-y-2 text-gray-400 text-sm mb-6">
               <li>Rua Maracatiara, 1620 - Nova Brasilia</li>
               <li>Ji-Paraná - RO, 76908-602</li>
             </ul>
+            <div className="rounded-xl overflow-hidden glass h-48 w-full gs-reveal">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3896.223838448839!2d-61.942442!3d-10.871889!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x93cb419614964193%3A0x6296419314964193!2sR.%20Maracatiara%2C%201620%20-%20Nova%20Brasilia%2C%20Ji-Paran%C3%A1%20-%20RO%2C%2076908-602!5e0!3m2!1spt-BR!2sbr!4v1710175833000!5m2!1spt-BR!2sbr" 
+                width="100%" 
+                height="100%" 
+                style={{ border: 0 }} 
+                allowFullScreen 
+                loading="lazy" 
+                referrerPolicy="no-referrer-when-downgrade"
+              ></iframe>
+            </div>
           </div>
           <div>
             <h4 className="text-white font-semibold mb-4">Redes Sociais</h4>
             <div className="flex gap-4">
-              <a href="https://api.whatsapp.com/send/?phone=5569992728415" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-gold hover:text-dark transition-all duration-300 group" aria-label="WhatsApp">
-                <Phone size={20} className="group-hover:scale-110 transition-transform" />
+              <a href="https://api.whatsapp.com/send/?phone=5569992728415" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-gold hover:text-dark transition-all duration-300 group">
+                <MessageCircle size={20} className="group-hover:scale-110 transition-transform" />
               </a>
-              <a href="https://www.instagram.com/pablinabeauty/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-gold hover:text-dark transition-all duration-300 group" aria-label="Instagram">
+              <a href="https://www.instagram.com/pablinabeauty/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-gold hover:text-dark transition-all duration-300 group">
                 <Instagram size={20} className="group-hover:scale-110 transition-transform" />
               </a>
-              <a href="https://www.facebook.com/pablinabeauty/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-gold hover:text-dark transition-all duration-300 group" aria-label="Facebook">
+              <a href="https://www.facebook.com/pablinabeauty/" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full glass flex items-center justify-center hover:bg-gold hover:text-dark transition-all duration-300 group">
                 <Facebook size={20} className="group-hover:scale-110 transition-transform" />
               </a>
             </div>
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 mt-12 pt-8 border-t border-white/5 text-center text-sm text-gray-600">
-          &copy; 2026 Pablina Beauty. Todos os direitos reservados.
+          &copy; {new Date().getFullYear()} Pablina Beauty. Todos os direitos reservados.
         </div>
       </footer>
 
       {/* Floating WhatsApp Button */}
-      <a href="https://api.whatsapp.com/send/?phone=5569992728415" target="_blank" rel="noopener noreferrer" className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300 group" aria-label="WhatsApp">
-        <Phone size={30} className="text-white" />
-        <span className="absolute right-full mr-4 bg-white text-dark px-4 py-2 rounded-lg text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">Fale Conosco</span>
+      <a 
+        href="https://api.whatsapp.com/send/?phone=5569992728415" 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        className="fixed bottom-8 right-8 z-50 w-14 h-14 bg-[#25D366] rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-transform duration-300 group animate-pulse-gold"
+      >
+        <MessageCircle size={30} className="text-white" />
+        <span className="absolute right-full mr-4 bg-white text-dark px-4 py-2 rounded-lg text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none shadow-xl">
+          Fale Conosco
+        </span>
       </a>
     </div>
   );

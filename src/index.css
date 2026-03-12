@@ -1,37 +1,51 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap');
 
 @theme {
-  --font-display: "Playfair Display", serif;
-  --font-sans: "Plus Jakarta Sans", sans-serif;
-  --color-dark: #050505;
-  --color-darker: #0a0a0a;
-  --color-gold: #D4AF37;
-  --color-gold-light: #F3E5AB;
-  --color-pink-soft: #F8E1E7;
-  --color-pink-dark: #D9A8B6;
+    --color-dark: #050505;
+    --color-darker: #0a0a0a;
+    --color-gold: #D4AF37;
+    --color-gold-light: #F3E5AB;
+    --color-pink-soft: #F8E1E7;
+    --color-pink-dark: #D9A8B6;
+    
+    --font-display: 'Playfair Display', serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
 }
 
 @layer base {
-  body {
-    @apply bg-dark text-white overflow-x-hidden font-sans antialiased selection:bg-gold selection:text-dark;
-  }
+    body { 
+        @apply bg-dark text-white overflow-x-hidden antialiased selection:bg-gold selection:text-dark;
+    }
 }
 
 @layer components {
-  .glass {
-    @apply bg-dark/60 backdrop-blur-xl border border-white/5;
-  }
-  
-  .text-gradient {
-    @apply bg-linear-to-r from-pink-soft to-gold bg-clip-text text-transparent;
-  }
-  
-  .hide-scroll {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  
-  .hide-scroll::-webkit-scrollbar {
-    display: none;
-  }
+    .glass { 
+        @apply bg-dark/60 backdrop-blur-xl border border-white/5;
+    }
+    
+    .text-gradient { 
+        background: linear-gradient(to right, #F8E1E7, #D4AF37); 
+        -webkit-background-clip: text; 
+        -webkit-text-fill-color: transparent; 
+    }
+    
+    .hide-scroll::-webkit-scrollbar { 
+        display: none; 
+    }
+}
+
+/* Custom Animations */
+@keyframes pulse-gold {
+    0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+    70% { box-shadow: 0 0 0 15px rgba(212, 175, 55, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+}
+
+.animate-pulse-gold { 
+    animation: pulse-gold 2s infinite; 
+}
+
+.hover-glow:hover { 
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); 
 }
