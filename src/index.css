@@ -1,1 +1,37 @@
 @import "tailwindcss";
+
+@theme {
+  --font-display: "Playfair Display", serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --color-dark: #050505;
+  --color-darker: #0a0a0a;
+  --color-gold: #D4AF37;
+  --color-gold-light: #F3E5AB;
+  --color-pink-soft: #F8E1E7;
+  --color-pink-dark: #D9A8B6;
+}
+
+@layer base {
+  body {
+    @apply bg-dark text-white overflow-x-hidden font-sans antialiased selection:bg-gold selection:text-dark;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-dark/60 backdrop-blur-xl border border-white/5;
+  }
+  
+  .text-gradient {
+    @apply bg-linear-to-r from-pink-soft to-gold bg-clip-text text-transparent;
+  }
+  
+  .hide-scroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .hide-scroll::-webkit-scrollbar {
+    display: none;
+  }
+}
