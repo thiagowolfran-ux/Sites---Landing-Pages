@@ -78,8 +78,8 @@ const Navbar = () => {
       </div>
 
       {/* Mobile Nav */}
-      <div className={`md:hidden absolute top-full left-0 w-full glass transition-all duration-500 overflow-hidden ${
-        isMenuOpen ? 'max-h-64 opacity-100 py-6' : 'max-h-0 opacity-0 py-0'
+      <div className={`md:hidden absolute top-full left-0 w-full bg-dark/98 backdrop-blur-3xl shadow-2xl border-b border-white/5 transition-all duration-500 overflow-hidden ${
+        isMenuOpen ? 'max-h-[400px] opacity-100 py-8' : 'max-h-0 opacity-0 py-0'
       }`}>
         <nav className="flex flex-col items-center gap-6">
           {navLinks.map((link) => (
@@ -122,7 +122,7 @@ const ServiceCard = ({ title, desc }: { title: string; desc: string }) => (
 );
 
 const TestimonialCard = ({ name, text }: { name: string; text: string; key?: React.Key }) => (
-  <div className="min-w-[300px] md:min-w-[400px] glass p-8 rounded-3xl snap-center gs-reveal">
+  <div className="min-w-[85vw] sm:min-w-[350px] md:min-w-[400px] glass p-6 md:p-8 rounded-3xl snap-center gs-reveal">
     <div className="text-gold mb-4 flex gap-1">
       {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
     </div>
@@ -231,22 +231,22 @@ export default function App() {
         </div>
         <div className="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col items-center text-center mt-12">
           <p className="hero-text text-pink-soft tracking-[0.3em] text-xs md:text-sm font-bold uppercase mb-6">Especialista em Cílios & Sobrancelhas</p>
-          <h1 className="hero-text font-display text-5xl md:text-7xl lg:text-9xl font-medium leading-[1] tracking-tight text-white max-w-5xl mb-8">
+          <h1 className="hero-text font-display text-5xl md:text-7xl lg:text-8xl font-medium leading-[1.1] tracking-tight text-white max-w-5xl mb-6 md:mb-8">
             Realce sua <br/><span className="text-gradient italic">Beleza Natural</span>
           </h1>
-          <p className="hero-text text-gray-400 text-lg md:text-2xl max-w-2xl font-light mb-12">
+          <p className="hero-text text-gray-400 text-base md:text-2xl max-w-2xl font-light mb-10 md:mb-12">
             Há mais de 7 anos transformando olhares com excelência e paixão em Ji-Paraná.
           </p>
-          <div className="hero-text flex flex-col sm:flex-row gap-4">
-            <a href="https://api.whatsapp.com/send/?phone=5569992728415" target="_blank" rel="noopener noreferrer" className="px-10 py-4 bg-gold text-dark font-bold rounded-full hover:bg-gold-light transition-all duration-300">Agendar Agora</a>
-            <a href="#portfolio" className="px-10 py-4 border border-white/20 text-white font-bold rounded-full hover:bg-white/5 transition-all duration-300">Ver Portfólio</a>
+          <div className="hero-text flex flex-col sm:flex-row gap-4 w-full sm:w-auto px-2 sm:px-0">
+            <a href="https://api.whatsapp.com/send/?phone=5569992728415" target="_blank" rel="noopener noreferrer" className="w-full sm:w-auto px-10 py-4 bg-gold text-dark font-bold rounded-full hover:bg-gold-light transition-all duration-300 text-center">Agendar Agora</a>
+            <a href="#portfolio" className="w-full sm:w-auto px-10 py-4 border border-white/20 text-white font-bold rounded-full hover:bg-white/5 transition-all duration-300 text-center">Ver Portfólio</a>
           </div>
         </div>
       </section>
 
       {/* Sobre */}
-      <section id="sobre" className="py-32 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+      <section id="sobre" className="py-20 md:py-32 px-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <div className="relative rounded-[2.5rem] overflow-hidden aspect-[4/5] shadow-2xl gs-reveal">
             <img 
               src="https://lh3.googleusercontent.com/d/1LbCjYPKdRYiH597SAX-62SaWrg-WaLq7" 
@@ -262,8 +262,8 @@ export default function App() {
             </div>
           </div>
           <div className="gs-reveal">
-            <h2 className="font-display text-4xl md:text-6xl mb-8 leading-tight">A Arte de <br/><span className="italic text-gold">Transformar Olhares</span></h2>
-            <p className="text-gray-400 text-lg font-light leading-relaxed mb-10">
+            <h2 className="font-display text-4xl md:text-5xl lg:text-6xl mb-6 md:mb-8 leading-tight">A Arte de <br className="hidden md:block"/><span className="italic text-gold">Transformar Olhares</span></h2>
+            <p className="text-gray-400 text-base md:text-lg font-light leading-relaxed mb-8 md:mb-10">
               Com anos de experiência e paixão pela estética, criei um espaço onde cada detalhe é pensado para o seu bem-estar. Minha missão é elevar sua autoestima através de técnicas avançadas e um olhar clínico para a harmonia facial.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
@@ -281,7 +281,7 @@ export default function App() {
       </section>
 
       {/* Serviços */}
-      <section id="servicos" className="py-32 bg-darker">
+      <section id="servicos" className="py-20 md:py-32 bg-darker">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20 gs-reveal">
             <h2 className="font-display text-4xl md:text-6xl mb-6">Nossos <span className="italic text-gold">Serviços</span></h2>
@@ -297,12 +297,12 @@ export default function App() {
       </section>
 
       {/* Passo a Passo */}
-      <section className="py-32 px-6 max-w-7xl mx-auto">
-        <div className="text-center mb-20 gs-reveal">
-          <h2 className="font-display text-4xl md:text-6xl mb-6">A Experiência <span className="italic text-gold">Pablina</span></h2>
-          <p className="text-gray-400 max-w-xl mx-auto text-lg">Como transformamos o seu olhar em 4 passos fundamentais.</p>
+      <section className="py-20 md:py-32 px-6 max-w-7xl mx-auto">
+        <div className="text-center mb-16 md:mb-20 gs-reveal">
+          <h2 className="font-display text-4xl md:text-6xl mb-4 md:mb-6">A Experiência <span className="italic text-gold">Pablina</span></h2>
+          <p className="text-gray-400 max-w-xl mx-auto text-base md:text-lg">Como transformamos o seu olhar em 4 passos fundamentais.</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 relative">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-12 relative">
           <div className="hidden md:block absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-gold/0 via-gold/40 to-gold/0 -translate-y-1/2 z-0"></div>
           {[
             { step: 1, title: "Avaliação", desc: "Análise detalhada do seu formato de olho e saúde dos fios naturais." },
@@ -320,9 +320,9 @@ export default function App() {
       </section>
 
       {/* Portfólio */}
-      <section id="portfolio" className="py-32 bg-darker overflow-hidden">
+      <section id="portfolio" className="py-20 md:py-32 bg-darker overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8 gs-reveal">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 md:mb-16 gap-6 md:gap-8 gs-reveal">
             <div className="text-left">
               <h2 className="font-display text-4xl md:text-6xl mb-4">Nossa <span className="italic text-gold">Galeria</span></h2>
               <p className="text-gray-400 text-lg">Resultados reais de clientes apaixonadas.</p>
@@ -354,7 +354,7 @@ export default function App() {
               "1GgW-MTFcPpa0-hCHIPtFBQ0QJQp9vLLd",
               "1thZJUy1HdTuB0V6CGULQI_5WibG0K51q"
             ].map((id, i) => (
-              <div key={i} className="min-w-[80%] md:min-w-[33.333%] px-4 snap-start gs-reveal">
+              <div key={i} className="min-w-[85vw] sm:min-w-[50%] md:min-w-[33.333%] px-4 snap-start gs-reveal">
                 <div className="aspect-square rounded-[2rem] overflow-hidden group relative">
                   <img 
                     src={`https://lh3.googleusercontent.com/d/${id}`} 
@@ -372,10 +372,10 @@ export default function App() {
       </section>
 
       {/* Depoimentos */}
-      <section className="py-32 px-6 max-w-7xl mx-auto overflow-hidden relative">
-        <div className="text-center mb-20 gs-reveal">
-          <h2 className="font-display text-4xl md:text-6xl mb-6">O que <span className="italic text-gold">Dizem</span></h2>
-          <p className="text-gray-400 text-lg">A satisfação das nossas clientes é o nosso maior orgulho.</p>
+      <section className="py-20 md:py-32 px-6 max-w-7xl mx-auto overflow-hidden relative">
+        <div className="text-center mb-12 md:mb-20 gs-reveal">
+          <h2 className="font-display text-4xl md:text-6xl mb-4 md:mb-6">O que <span className="italic text-gold">Dizem</span></h2>
+          <p className="text-gray-400 text-base md:text-lg">A satisfação das nossas clientes é o nosso maior orgulho.</p>
         </div>
         
         <div className="relative">
@@ -413,10 +413,10 @@ export default function App() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-32 bg-darker">
+      <section id="faq" className="py-20 md:py-32 bg-darker">
         <div className="max-w-4xl mx-auto px-6">
-          <div className="text-center mb-20 gs-reveal">
-            <h2 className="font-display text-4xl md:text-6xl mb-6">Dúvidas <span className="italic text-gold">Frequentes</span></h2>
+          <div className="text-center mb-12 md:mb-20 gs-reveal">
+            <h2 className="font-display text-4xl md:text-6xl mb-4 md:mb-6">Dúvidas <span className="italic text-gold">Frequentes</span></h2>
           </div>
           <div className="grid grid-cols-1 gap-6 gs-reveal">
             {[
@@ -435,11 +435,11 @@ export default function App() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/5 py-24 bg-dark">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-16">
-          <div className="md:col-span-2">
-            <div className="font-display text-4xl font-semibold tracking-wider text-gold mb-6">PablinaBeauty</div>
-            <p className="text-gray-400 text-lg max-w-sm mb-8 leading-relaxed">Elevando a sua autoestima com técnicas exclusivas e um atendimento personalizado em Ji-Paraná.</p>
+      <footer className="border-t border-white/5 py-16 md:py-24 bg-dark">
+        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-12 md:gap-16">
+          <div className="md:col-span-2 sm:col-span-2">
+            <div className="font-display text-3xl md:text-4xl font-semibold tracking-wider text-gold mb-4 md:mb-6">PablinaBeauty</div>
+            <p className="text-gray-400 text-base md:text-lg max-w-sm mb-6 md:mb-8 leading-relaxed">Elevando a sua autoestima com técnicas exclusivas e um atendimento personalizado em Ji-Paraná.</p>
             <div className="flex gap-6">
               <a href="https://www.instagram.com/pablinabeauty/" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full glass flex items-center justify-center hover:bg-gold hover:text-dark transition-all duration-500 group" aria-label="Instagram">
                 <Instagram size={24} className="group-hover:scale-110 transition-transform" />
@@ -484,11 +484,11 @@ export default function App() {
         href="https://api.whatsapp.com/send/?phone=5569992728415" 
         target="_blank" 
         rel="noopener noreferrer" 
-        className="fixed bottom-8 right-8 z-50 w-16 h-16 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(37,211,102,0.3)] hover:scale-110 active:scale-95 transition-all duration-300 group" 
+        className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-50 w-14 h-14 md:w-16 md:h-16 bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_10px_30px_rgba(37,211,102,0.3)] hover:scale-110 active:scale-95 transition-all duration-300 group" 
         aria-label="WhatsApp"
       >
-        <Phone size={32} className="text-white" />
-        <span className="absolute right-full mr-6 bg-white text-dark px-5 py-2.5 rounded-xl text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0 whitespace-nowrap pointer-events-none shadow-2xl">Fale Conosco</span>
+        <Phone className="w-7 h-7 md:w-8 md:h-8 text-white" />
+        <span className="absolute right-full mr-4 md:mr-6 bg-white text-dark px-4 md:px-5 py-2 md:py-2.5 rounded-xl text-xs md:text-sm font-bold opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-4 group-hover:translate-x-0 whitespace-nowrap pointer-events-none shadow-2xl">Fale Conosco</span>
       </a>
     </div>
   );
